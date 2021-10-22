@@ -24,9 +24,10 @@ html, body {
 
 var yb_id = gVar()["v"];
 var color = gVar()["color"];
+var type = gVar()["type"];
 
 var mp3 = '<div style="width:100%;height:100px;overflow:hidden">'+
-			'<iframe src="https://www.yt-download.org/api/button/mp3/'+yb_id+'" style="border: 0; top:0; left:0; right:0; bottom:0; width:100%; height:100%" scrolling="no" FRAMEBORDER="0"></iframe>'+
+			'<iframe src="https://www.yt-download.org/api/button/'+type+'/'+yb_id+'" style="border: 0; top:0; left:0; right:0; bottom:0; width:100%; height:100%" scrolling="no" FRAMEBORDER="0"></iframe>'+
 		'</div>';
 
 document.write(mp3);
