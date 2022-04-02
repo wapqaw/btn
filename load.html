@@ -7,7 +7,7 @@
 <style type="text/css">
 html, body {
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
   padding: 0;
   margin: 0;
 }
@@ -15,7 +15,7 @@ html, body {
 </head>
 <body>
 <script type="text/javascript">
-	String.prototype.hex2bin = function (){
+String.prototype.hex2bin = function (){
   var i = 0, l = this.length - 1, bytes = []
   for (i; i < l; i += 2)
   {
