@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download [MP3/MP4]</title>
+    <meta name="robots" content="noindex,nofollow">
+    <script src="https://unpkg.com/btch-downloader/dist/browser/index.min.js"></script>
+    
+    <style>
+        :root {
+            --btn-color: #e74c3c;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: transparent;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            background-color: var(--btn-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 220px;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        #loading-container {
+            display: none; 
+            font-size: 14px;
+            color: #444;
+            font-weight: 600;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--btn-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #result-container {
+            display: none; 
+            flex-direction: column; 
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .video-title {
+            font-size: 13px;
+            color: #555;
+            font-weight: bold;
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" style="width: 100%; display: flex; justify-content: center;">
+        <button id="btn-fetch" class="btn">Download [MP3 / MP4]</button>
+
+        <div id="loading-container">
+            <div class="spinner"></div> <span>Sedang memproses...</span>
+        </div>
+
+        <div id="result-container">
+            <button id="btn-mp3" class="btn">Download MP3</button>
+            <button id="btn-mp4" class="btn">Download MP4</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = urlParams.get('id') || urlParams.get('v');
+        const btnColor = urlParams.get('color');
+
+        if (btnColor) {
+            const isHexWithoutHash = /^[0-9A-F]{3,6}$/i.test(btnColor);
+            const finalColor = isHexWithoutHash ? `#${btnColor}` : btnColor;
+            document.documentElement.style.setProperty('--btn-color', finalColor);
+        }
+
+        const btnFetch = document.getElementById('btn-fetch');
+        const loadingContainer = document.getElementById('loading-container');
+        const resultContainer = document.getElementById('result-container');
+        const btnMp3 = document.getElementById('btn-mp3');
+        const btnMp4 = document.getElementById('btn-mp4');
+
+        btnFetch.addEventListener('click', async () => {
+            if (!videoId) {
+                //alert('ID YouTube tidak ditemukan! Pastikan embed format url memuat ?id=... atau ?v=...');
+                return;
+            }
+
+            const btch = window.btch;
+            if (!btch) {
+                //alert('Library btch-downloader gagal dimuat. Pastikan koneksi stabil.');
+                return;
+            }
+
+            btnFetch.style.display = 'none';
+            loadingContainer.style.display = 'flex';
+
+            const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+            
+            try {
+                const data = await btch.youtube(youtubeUrl);
+
+                if (data && data.status) {
+                    loadingContainer.style.display = 'none';
+                    resultContainer.style.display = 'flex';
+
+                    btnMp3.addEventListener('click', () => {
+                        window.open(data.mp3, '_blank'); 
+                    });
+
+                    btnMp4.addEventListener('click', () => {
+                        window.open(data.mp4, '_blank'); 
+                    });
+
+                } else {
+                    throw new Error('Data tidak ditemukan');
+                }
+            } catch (error) {
+                console.error("Fetch Error: ", error);
+                alert("Gagal memproses video. Silakan coba lagi.");
+                
+                loadingContainer.style.display = 'none';
+                btnFetch.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
