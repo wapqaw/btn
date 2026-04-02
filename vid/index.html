@@ -39,6 +39,9 @@
             width: 100%;
             max-width: 220px;
             box-sizing: border-box;
+            text-decoration: none; 
+            text-align: center;
+            display: inline-block;
         }
 
         .btn:hover {
@@ -104,8 +107,8 @@
         </div>
 
         <div id="result-container">
-            <button id="btn-mp3" class="btn">Download MP3</button>
-            <button id="btn-mp4" class="btn">Download MP4</button>
+            <a id="link-mp3" class="btn" target="_blank" rel="noopener noreferrer">Download MP3</a>
+            <a id="link-mp4" class="btn" target="_blank" rel="noopener noreferrer">Download MP4</a>
         </div>
     </div>
 
@@ -123,23 +126,23 @@
         const btnFetch = document.getElementById('btn-fetch');
         const loadingContainer = document.getElementById('loading-container');
         const resultContainer = document.getElementById('result-container');
-        const btnMp3 = document.getElementById('btn-mp3');
-        const btnMp4 = document.getElementById('btn-mp4');
+        
+        const linkMp3 = document.getElementById('link-mp3');
+        const linkMp4 = document.getElementById('link-mp4');
 
         btnFetch.addEventListener('click', async () => {
             if (!videoId) {
-                //alert('ID YouTube tidak ditemukan! Pastikan embed format url memuat ?id=... atau ?v=...');
                 return;
             }
 
             const btch = window.btch;
             if (!btch) {
-                //alert('Library btch-downloader gagal dimuat. Pastikan koneksi stabil.');
                 return;
             }
 
             btnFetch.style.display = 'none';
             loadingContainer.style.display = 'flex';
+
 
             const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
             
@@ -150,13 +153,8 @@
                     loadingContainer.style.display = 'none';
                     resultContainer.style.display = 'flex';
 
-                    btnMp3.addEventListener('click', () => {
-                        window.open(data.mp3, '_blank'); 
-                    });
-
-                    btnMp4.addEventListener('click', () => {
-                        window.open(data.mp4, '_blank'); 
-                    });
+                    linkMp3.href = data.mp3;
+                    linkMp4.href = data.mp4;
 
                 } else {
                     throw new Error('Data tidak ditemukan');
